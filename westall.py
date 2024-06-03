@@ -5,8 +5,9 @@ from textwrap import fill
 import random
 import string
 from datetime import datetime
-from Instagram_api.instagram_graph_api import post_story
+from lib.posting_instagram import post_story,publish_container
 from git import Repo
+import time
 
 def generate_random_timestamp_name(length=15):
   """Generates a random string with current timestamp (10 characters) 
@@ -60,8 +61,8 @@ if response.status_code == 200:
   # Print prayer times
   # Replace with your image path and desired font path
   # different background and fonts for every day in the week, except Friday for now
-  image_path = "./picture/1-bg2-westall.jpg"
-  font_path = "./font/MidcentDisco.ttf"
+  image_path = "picture/1-bg2-westall.jpg"
+  font_path = "font/MidcentDisco.ttf"
 
   # Load the background image
   image = Image.open(image_path)
@@ -120,12 +121,20 @@ if response.status_code == 200:
     draw.text(position, text, font=ImageFont.truetype(font_path, font_size), fill=font_color)
 
   # Save the modified image with a new name (optional)
-  new_image_path = generate_random_timestamp_name()
+  new_image_path = 'resource/' + generate_random_timestamp_name() + '.jpg'
   image.save(new_image_path)
 
   print(f"Prayer times added to image: {new_image_path}")
+  repo = Repo('.')
+  repo.index.add(new_image_path)
+  repo.index.commit('Completing generation '+ new_image_path)
+  remote = repo.remote()
+  remote.push()
 
-
+  status = post_story(image_url='https://github.com/masjidwestall/westall_ig/blob/main/' + new_image_path + '?raw=true')
+  time.sleep(5)
+  publish_container(status)
+  print("published...")
 
 else:
   print("Error:", response.status_code)
