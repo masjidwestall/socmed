@@ -5,9 +5,12 @@ from textwrap import fill
 import random
 import string
 from datetime import datetime
-from lib.posting_instagram import post_story,publish_container
+from lib.posting_instagram import post_story,publish_container,status_of_upload
 from git import Repo
 import time
+
+# where the raw image can be reached by facebook, include the last trailing path if needed
+git_path = 'https://raw.githubusercontent.com/masjidwestall/socmed/main/'
 
 def generate_random_timestamp_name(length=15):
   """Generates a random string with current timestamp (10 characters) 
@@ -131,10 +134,19 @@ if response.status_code == 200:
   remote = repo.remote()
   remote.push()
 
-  status = post_story(image_url='https://github.com/masjidwestall/westall_ig/blob/main/' + new_image_path + '?raw=true')
-  time.sleep(5)
-  publish_container(status)
-  print("published...")
+  status = post_story(image_url=git_path + new_image_path)
+  
+  container_id = status["id"]
+
+  for _ in range(10):  # Check max 10 times with sleep 15 seconds each
+    time.sleep(15)
+    check = status_of_upload(container_id)
+   # status_code = check["status_code"]
+    print(f'Status Upload : {check["status_code"]}')
+    if check["status_code"] == 'FINISHED':
+      publish_container(container_id)
+      print("Published !")
+      break
 
 else:
   print("Error:", response.status_code)

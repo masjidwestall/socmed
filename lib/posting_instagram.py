@@ -16,7 +16,7 @@ def post_reel(caption='', media_type ='',share_to_feed='',thumb_offset='',video_
     response =response.json()
     return response
 
-def post_story(caption='', image_url=''):
+def post_story(image_url=''):
     url = config.graph_url + config.ig_acct_id + '/media'
     param = dict()
     param['access_token'] = config.longlive_token
@@ -102,8 +102,8 @@ def publish_container(creation_id = ''):
     response = response.json()
     return response
 
-caption = 'Posting a Video using Instagram Graph API'
-media_type = 'REELS'
+caption = 'Prayer Time @imcv.westall'
+media_type = 'STORIES'
 share_to_feed = 'true'
 thumb_offset = '1'
 
