@@ -1,5 +1,6 @@
+Masjid Westall
+==============
 Alhamdulillah, this is the python script to publish prayer time into socmed story. The idea is for your masjid to centralize all the prayer time settings via masjidal where it will update your masjidal screen, and then that same prayer time will be published to your masjid's social media accounts. Currently (May 2024)  masjidal doesn't have this feature yet.
--------------------------------------------------------------------
 
 At this point it only supports instagram story.
 What you need :
