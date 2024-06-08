@@ -7,6 +7,23 @@ from lib.util import generate_random_timestamp_name,parse_prayer_time
 from git import Repo
 import time
 
+#############
+import logging
+from git import Repo, GitCommandError
+
+# Set up logging configuration
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("git_repo.log"),
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger(__name__)
+#############
+
 # where the raw image can be reached by facebook, include the last trailing path if needed
 git_path = 'https://raw.githubusercontent.com/masjidwestall/socmed/main/'
 
@@ -138,11 +155,18 @@ if response.status_code == 200:
 
   print(f"Prayer times added to image: {new_image_path}")
 
-  repo = Repo('.')
-  repo.index.add(new_image_path)
-  repo.index.commit('Completing generation '+ new_image_path)
-  remote = repo.remote()
-  remote.push()
+  try: 
+   repo = Repo('.')
+   repo.index.add(new_image_path)
+   repo.index.commit('Story image generated : '+ new_image_path)
+   remote = repo.remote()
+   remote.push()
+
+  except GitCommandError as e:
+   logger.exception("Git command error occurred")
+  except Exception as e:
+   logger.exception("An unexpected error occurred")
+
 
   status = post_story(image_url=git_path + new_image_path)
   
@@ -157,9 +181,8 @@ if response.status_code == 200:
       publish_container(container_id)
       print("Published !")
       break
-
 else:
   print("Error:", response.status_code) 
   
-   
+
 
