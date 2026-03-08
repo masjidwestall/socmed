@@ -94,7 +94,7 @@ if response.status_code == 200:
  col2_x = margin + col_width
  col3_x = margin + 2 * col_width
 
- line_height = 70
+ line_height = 80
  bottom_margin = int(image_height * 0.08)
  # Table lines: header + 5 prayers + (1 if Friday for Jumma)
  num_table_lines = 1 + len(rows) + (1 if curr_day == "Friday" else 0)
